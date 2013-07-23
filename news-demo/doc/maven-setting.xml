@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" 
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+  <mirrors>
+    <mirror>
+      <id>gongda-nexus</id>
+      <mirrorOf>*</mirrorOf>
+      <url>http://115.28.0.39:8081/nexus/content/groups/public</url>
+    </mirror>  
+</mirrors>
+  
+  <servers>
+    <server>
+      <id>gongda_releases</id>
+      <username>gongda</username>
+      <password>gongda6868</password>
+    </server>
+        <server>
+      <id>gongda_snapshots</id>
+      <username>gongda</username>
+      <password>gongda6868</password>
+    </server>
+        <server>
+      <id>gongda_nexus</id>
+      <username>gongda</username>
+      <password>gongda6868</password>
+    </server>  
+</servers>
+  
+  <profiles>
+    <profile>
+      <id>gongda-nexus</id>
+      <!--Enable snapshots for the built in central repo to direct -->
+      <!--all requests to nexus via the mirror -->
+      <repositories>
+        <repository>
+          <id>central</id>
+          <url>http://central</url>
+          <releases><enabled>true</enabled></releases>
+          <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+      </repositories>
+     <pluginRepositories>
+        <pluginRepository>
+          <id>centralplugin</id>
+          <url>http://central</url>
+          <releases><enabled>true</enabled></releases>
+          <snapshots><enabled>true</enabled></snapshots>
+        </pluginRepository>
+      </pluginRepositories>
+    </profile>
+  </profiles>
+  <activeProfiles>
+    <!--make the profile active all the time -->
+    <activeProfile>gongda-nexus</activeProfile>  
+</activeProfiles>
+</settings>
