@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.easou.news.crawl.mapper.TemplateFilterMapper">
+	<select id="selectRegexByFid" resultType="string" parameterType="int">
+		<![CDATA[
+			SELECT 
+				regex
+			FROM
+				news_template_filter
+			WHERE
+				fid=#{fid}
+		]]>
+	</select>
+</mapper>

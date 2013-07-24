@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context-3.0.xsd 
+	http://www.springframework.org/schema/task 
+	http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+	<!-- jedis配置 -->
+	<bean id="frontierRedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<property name="maxActive" value="${frontier.redis.maxActive}" />
+		<property name="maxWait" value="${frontier.redis.maxWait}" />
+		<property name="maxIdle" value="${frontier.redis.maxIdle}" />
+		<property name="minIdle" value="${frontier.redis.minIdle}" />
+		<property name="timeBetweenEvictionRunsMillis" value="${frontier.redis.timeBetweenEvictionRunsMillis}" />
+		<property name="minEvictableIdleTimeMillis" value="${frontier.redis.minEvictableIdleTimeMillis}" />
+	</bean>
+	<bean id="frontierRedisConnectionFactory"
+		class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+		<property name="hostName" value="${frontier.redis.host}" />
+		<property name="port" value="${frontier.redis.port}" />
+		<property name="usePool" value="${frontier.redis.usepool}" />
+		<property name="poolConfig" ref="frontierRedisPoolConfig" />
+	</bean>
+	<bean id="frontierRedisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
+		<property name="connectionFactory" ref="frontierRedisConnectionFactory" />
+	</bean>
+</beans>

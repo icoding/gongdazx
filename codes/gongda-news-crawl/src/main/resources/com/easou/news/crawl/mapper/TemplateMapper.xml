@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.easou.news.crawl.mapper.TemplateMapper">
+	<resultMap type="com.easou.news.crawl.model.Template" id="templateMap">
+		<id property="id" column="id" javaType="int" jdbcType="INTEGER"/>
+		<result property="source" column="source" javaType="string" jdbcType="VARCHAR"/>
+		<result property="classify" column="classify" javaType="string" jdbcType="VARCHAR"/>
+		<result property="rank" column="rank" javaType="int" jdbcType="INTEGER"/>
+		<result property="webName" column="webname" javaType="string" jdbcType="VARCHAR"/>
+		<result property="charset" column="charset" javaType="string" jdbcType="VARCHAR"/>
+		<result property="contentFrom" column="content_from" javaType="int" jdbcType="INTEGER"/>
+		<result property="contentExpression" column="content_expression" javaType="string" jdbcType="VARCHAR"/>
+		<result property="usedBy" column="used_by" javaType="string" jdbcType="VARCHAR"/>
+		<collection property="filterRegexs" column="filter_fid" javaType="list" select="com.easou.news.crawl.mapper.TemplateFilterMapper.selectRegexByFid"></collection>
+		<collection property="webNameRegexs" column="webname_fid" javaType="list" select="com.easou.news.crawl.mapper.TemplateWebNameMapper.selectRegexByFid"></collection>
+		<collection property="contentRegexs" column="content_fid" javaType="list" select="com.easou.news.crawl.mapper.TemplateContentMapper.selectRegexByFid"></collection>
+		<collection property="templateBasicInfos" column="basicinfo_fid" javaType="list" select="com.easou.news.crawl.mapper.TemplateBasicInfoMapper.selectAllByFid"></collection>
+		<collection property="templateContentPage" column="contentpage_fid" select="com.easou.news.crawl.mapper.TemplateContentPageMapper.selectByFid"></collection>
+		<collection property="templateTagWeights" column="weight_fid" javaType="list" select="com.easou.news.crawl.mapper.TemplateTagWeightMapper.selectByFid"></collection>
+	</resultMap>
+	<resultMap type="com.easou.news.crawl.model.Template" id="seedMap">
+		<id property="id" column="id" javaType="int" jdbcType="INTEGER"/>
+		<result property="source" column="source" javaType="string" jdbcType="VARCHAR"/>
+		<result property="classify" column="classify" javaType="string" jdbcType="VARCHAR"/>
+		<result property="rank" column="rank" javaType="int" jdbcType="INTEGER"/>
+		<result property="webName" column="webname" javaType="string" jdbcType="VARCHAR"/>
+		<result property="charset" column="charset" javaType="string" jdbcType="VARCHAR"/>
+		<result property="contentFrom" column="content_from" javaType="int" jdbcType="INTEGER"/>
+		<result property="contentExpression" column="content_expression" javaType="string" jdbcType="VARCHAR"/>
+		<result property="usedBy" column="used_by" javaType="string" jdbcType="VARCHAR"/>
+	</resultMap>	
+	<select id="selectAll" resultMap="templateMap">
+		<![CDATA[
+			SELECT 
+				id,
+				source,
+				classify,
+				rank,
+				webname,
+				charset,
+				content_from,
+				content_expression,
+				used_by,
+				filter_fid,
+				webname_fid,
+				content_fid,
+				basicinfo_fid,
+				contentpage_fid,
+				weight_fid,
+				rankinfo
+			FROM
+				news_template_seed where status = 1;
+		]]>
+	</select>
+	
+	<select id="selectAllSeed" resultMap="seedMap">
+		<![CDATA[
+			SELECT 
+				id,
+				source,
+				classify,
+				rank,
+				webname,
+				charset,
+				content_from,
+				used_by,
+				rankinfo
+			FROM
+				news_template_seed where status = 1;
+		]]>
+	</select>
+	
+	<select id="selectDownSeed" resultMap="seedMap">
+		<![CDATA[
+			SELECT 
+				id,
+				source,
+				classify,
+				rank,
+				webname,
+				charset,
+				content_from,
+				content_expression,
+				used_by,
+				rankinfo
+			FROM
+				news_template_seed where status != 1;
+		]]>
+	</select>
+	
+	
+	<select id="findById" resultMap="templateMap" parameterType="int">
+		<![CDATA[
+			SELECT 
+				id,
+				source,
+				classify,
+				rank,
+				webname,
+				charset,
+				content_from,
+				content_expression,
+				used_by,
+				filter_fid,
+				webname_fid,
+				content_fid,
+				basicinfo_fid,
+				contentpage_fid,
+				weight_fid,
+				rankinfo
+			FROM
+				news_template_seed where id = #{id}
+		]]>
+	</select>	
+</mapper>

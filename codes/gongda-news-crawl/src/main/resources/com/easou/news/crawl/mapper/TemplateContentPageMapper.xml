@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.easou.news.crawl.mapper.TemplateContentPageMapper">
+	<resultMap type="com.easou.news.crawl.model.TemplateContentPage" id="contentPageMapper">
+		<id property="id" column="id" javaType="int" jdbcType="INTEGER"/>
+		<result property="action" column="action" javaType="string" jdbcType="VARCHAR"/>
+		<result property="expression" column="expression" javaType="string" jdbcType="VARCHAR"/>
+		<result property="urlRegex" column="urlregex" javaType="string" jdbcType="VARCHAR"/>
+	</resultMap>
+	<select id="selectByFid" resultMap="contentPageMapper" parameterType="int">
+		<![CDATA[
+			SELECT 
+				id,
+				action,
+				expression,
+				urlRegex
+			FROM
+				news_template_contentpage
+			WHERE
+				fid=#{fid}
+		]]>
+	</select>
+</mapper>

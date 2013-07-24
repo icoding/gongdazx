@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.easou.news.crawl.mapper.TemplateTagWeightMapper">
+	<resultMap type="com.easou.news.crawl.model.TemplateTagWeight" id="tagWeightMapper">
+		<result property="tag" column="tag" javaType="string" jdbcType="VARCHAR"/>
+		<result property="weight" column="weight" javaType="int" jdbcType="INTEGER"/>
+	</resultMap>
+	<select id="selectByFid" resultMap="tagWeightMapper" parameterType="int">
+		<![CDATA[
+			SELECT 
+				tag,
+				weight
+			FROM
+				news_template_weight
+			WHERE
+				fid=#{fid}
+		]]>
+	</select>
+</mapper>

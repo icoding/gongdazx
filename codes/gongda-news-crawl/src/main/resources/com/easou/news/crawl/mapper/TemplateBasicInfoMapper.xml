@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.easou.news.crawl.mapper.TemplateBasicInfoMapper">
+	<resultMap type="com.easou.news.crawl.model.TemplateBasicInfo" id="basicInfoMapper">
+		<id property="id" column="id" javaType="int" jdbcType="INTEGER"/>
+		<result property="name" column="name" javaType="string" jdbcType="VARCHAR"/>
+		<result property="property" column="property" javaType="string" jdbcType="VARCHAR"/>
+		<result property="action" column="action" javaType="string" jdbcType="VARCHAR"/>
+		<result property="expression" column="expression" javaType="string" jdbcType="VARCHAR"/>
+		<result property="datePattern" column="datePattern" javaType="string" jdbcType="VARCHAR"/>
+		<result property="holdTags" column="holdTags" javaType="string" jdbcType="VARCHAR"/>
+		<result property="hasImage" column="hasImage" javaType="boolean" jdbcType="INTEGER"/>
+	</resultMap>
+	<select id="selectAllByFid" resultMap="basicInfoMapper" parameterType="int">
+		<![CDATA[
+			SELECT 
+				id,
+				name,
+				property,
+				action,
+				expression,
+				datePattern,
+				holdTags,
+				hasImage
+			FROM
+				news_template_basicinfo
+			WHERE
+				fid=#{fid}
+		]]>
+	</select>
+</mapper>

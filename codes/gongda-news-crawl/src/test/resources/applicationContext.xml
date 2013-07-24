@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context-3.0.xsd 
+	http://www.springframework.org/schema/task 
+	http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+	<import resource="classpath:applicationContext-redis-uni.xml"/>
+	<import resource="classpath:applicationContext-redis-frontier.xml"/>
+	<import resource="classpath:applicationContext-redis-storage.xml"/>
+	<context:component-scan
+		base-package="com.easou.news.crawl.frontier,
+				com.easou.news.crawl.service.impl,
+				com.easou.news.crawl.command,
+				com.easou.news.crawl.factory,
+				com.easou.news.crawl.task" />
+		
+	<!-- 定义受环境影响易变的变量 -->
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="ignoreResourceNotFound" value="true" />
+		<property name="locations">
+			<list>
+				<value>classpath:/jdbc-spider.properties</value>
+				<value>classpath:/redis-uni.properties</value>
+				<value>classpath:/redis-frontier.properties</value>
+				<value>classpath:/redis-storage.properties</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- 数据源配置,使用应用内的DBCP数据库连接池 -->
+	<bean id="spiderDataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${spider.dbcp.driver}" />
+		<property name="url" value="${spider.dbcp.url}" />
+		<property name="username" value="${spider.dbcp.username}" />
+		<property name="password" value="${spider.dbcp.password}" />
+		<property name="maxActive" value="${spider.dbcp.maxActive}" />
+		<property name="initialSize" value="${spider.dbcp.initialSize}" />
+		<property name="maxWait" value="${spider.dbcp.maxWait}" />
+		<property name="maxIdle" value="${spider.dbcp.maxIdle}" />
+		<property name="minIdle" value="${spider.dbcp.minIdle}" />
+		<property name="timeBetweenEvictionRunsMillis" value="${spider.dbcp.timeBetweenEvictionRunsMillis}" />
+		<property name="minEvictableIdleTimeMillis" value="${spider.dbcp.minEvictableIdleTimeMillis}" />
+		<property name="removeAbandoned" value="${spider.dbcp.removeAbandoned}" />
+		<property name="removeAbandonedTimeout" value="${spider.dbcp.removeAbandonedTimeout}" />
+		<property name="testWhileIdle" value="${spider.dbcp.testWhileIdle}" />
+		<property name="testOnBorrow" value="${spider.dbcp.testOnBorrow}" />
+		<property name="testOnReturn" value="${spider.dbcp.testOnReturn}" />
+		<property name="validationQuery" value="${spider.dbcp.validationQuery}" />
+	</bean>
+	<bean id="spiderSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="configLocation" value="classpath:mybatis-config.xml" />
+		<property name="dataSource" ref="spiderDataSource" />
+	</bean>
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="annotationClass" value="org.springframework.stereotype.Repository" />
+		<property name="basePackage" value="com.easou.news.crawl.mapper" />
+		<property name="sqlSessionFactory" ref="spiderSqlSessionFactory" />
+	</bean>
+	
+	<!-- 目录页责任链 -->
+	<bean id="catalogChainBase" class="org.apache.commons.chain.impl.ChainBase">
+		<constructor-arg>
+			<list>
+				<ref bean="preFetchCommand" />
+				<ref bean="fetchCommand" />
+				<ref bean="extractCommand" />
+				<ref bean="postProcessorCommand" />
+			</list>
+		</constructor-arg>
+	</bean>
+	<!-- 内容页责任链 -->
+	<bean id="contentChainBase" class="org.apache.commons.chain.impl.ChainBase">
+		<constructor-arg>
+			<list>
+				<ref bean="preFetchCommand" />
+				<ref bean="fetchCommand" />
+				<ref bean="extractCommand" />
+				<ref bean="filterCommand"/>
+				<ref bean="writeCommand"/>
+			</list>
+		</constructor-arg>
+	</bean>
+	
+	<!-- 线程池 -->
+	<bean id="executor"
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="20" />
+		<property name="maxPoolSize" value="20" />
+		<property name="keepAliveSeconds" value="60" />
+		<property name="allowCoreThreadTimeOut" value="false" />
+		<property name="queueCapacity" value="60" />
+		<property name="waitForTasksToCompleteOnShutdown" value="true"></property>
+	</bean>
+	
+	<bean id="crawlTask" class="com.easou.news.crawl.task.CrawlTask" scope="prototype" />
+	<bean id="classRelationFactory" class="com.easou.news.crawl.factory.ClassRelationFactory"/>
+	<bean id="templateFactory" class="com.easou.news.crawl.factory.TemplateFactory" />
+</beans>

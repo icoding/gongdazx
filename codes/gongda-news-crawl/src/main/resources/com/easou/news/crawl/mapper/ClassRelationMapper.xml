@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.easou.news.crawl.mapper.ClassRelationMapper">
+	<resultMap type="com.easou.news.crawl.model.ClassRelation" id="classRelationMap">
+		<id property="id" column="id" javaType="int" jdbcType="INTEGER"/>
+		<result property="class1" column="class1" javaType="string" jdbcType="VARCHAR"/>
+		<result property="class2" column="class2" javaType="string" jdbcType="VARCHAR"/>
+	</resultMap>	
+	<select id="selectAll" resultMap="classRelationMap">
+		<![CDATA[
+			SELECT 
+				id,
+				class1,
+				class2
+			FROM
+				news_class_relation;
+		]]>
+	</select>
+	
+</mapper>
